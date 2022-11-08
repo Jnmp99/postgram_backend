@@ -1,10 +1,13 @@
+export {};
+const getUserByUserName = require("../models/User");
+
 const compareUser = async (
   tempUsername: string,
   tempPassword: string,
   res: any
 ) => {
   try {
-    let [user, _] = await User.getUserByUserName(tempUsername);
+    let [user, _] = await getUserByUserName(tempUsername);
 
     if (user.length === 0) {
       res

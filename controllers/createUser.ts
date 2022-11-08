@@ -1,3 +1,7 @@
+const createUser = require("../models/User");
+const getUserByEmail = require("../models/User");
+const getUserByUserName = require("../models/User");
+
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -96,8 +100,8 @@ const getData = async (
   res: any
 ) => {
   try {
-    let [userBU, _] = await User.getUserByUserName(username);
-    let [userBE, _s] = await User.getUserByEmail(email);
+    let [userBU, _] = await getUserByUserName(username);
+    let [userBE, _s] = await getUserByEmail(email);
 
     if (userBU == true && userBE == true) {
       res.status(409).json({ error: "User already exist" });
@@ -107,15 +111,14 @@ const getData = async (
     const accessToken = jwt.sign(username, process.env.ACCESS_TOKEN_SECRET);
     res.status(201).json({ message: "User created", accessToken });
 
-    // bcrypt.genSalt().then((saltPassword:string) => {
-    //   bcrypt.hash(password, saltPassword).then((hashedPassword:string) => {
-    //     let user = new User(username, hashedPassword, email);
-    //     user = user.save();
+    bcrypt.genSalt().then((saltPassword: string) => {
+      bcrypt.hash(password, saltPassword).then((hashedPassword: string) => {
+        createUser(username, hashedPassword, email);
 
-    //     const accessToken = jwt.sign(username, process.env.ACCESS_TOKEN_SECRET);
-    //     res.status(201).json({ message: "User created", accessToken });
-    //   });
-    // });
+        const accessToken = jwt.sign(username, process.env.ACCESS_TOKEN_SECRET);
+        res.status(201).json({ message: "User created", accessToken });
+      });
+    });
 
     return;
   } catch (err) {

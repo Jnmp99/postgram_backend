@@ -1,4 +1,5 @@
 require("dotenv").config();
+const getUserHomePageUsername = require("../models/User");
 
 exports.getPosts = async (req: any, res: any, next: any) => {
   try {
@@ -16,7 +17,7 @@ exports.getPosts = async (req: any, res: any, next: any) => {
     );
 
     if (req.user) {
-      let [userHomePage, _] = await User.getUserHomePageUsername(req.user);
+      let [userHomePage, _] = await getUserHomePageUsername(req.user);
       res.status(200).json({ user: userHomePage });
     }
   } catch (error) {
