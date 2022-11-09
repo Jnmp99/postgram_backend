@@ -10,7 +10,7 @@ const compareUser = async (
   try {
     let [user, _] = await userDb.getUserByUserName(tempUsername);
 
-    if (user.length === 0) {
+    if (user.length === 0 || user === undefined) {
       res
         .status(409)
         .json({ error: "The user name or the password are incorrect" });
