@@ -1,5 +1,6 @@
-export {};
-const getUserByUserName = require("../models/User");
+const userDb = require("../models/User");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const compareUser = async (
   tempUsername: string,
@@ -7,7 +8,7 @@ const compareUser = async (
   res: any
 ) => {
   try {
-    let [user, _] = await getUserByUserName(tempUsername);
+    let [user, _] = await userDb.getUserByUserName(tempUsername);
 
     if (user.length === 0) {
       res
@@ -36,7 +37,7 @@ const compareUser = async (
 };
 
 const generateAccessToken = (user: string) => {
-  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15s" });
+  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
 };
 
 exports.logIn = (req: any, res: any, next: any) => {
@@ -48,3 +49,5 @@ exports.logIn = (req: any, res: any, next: any) => {
     next(error);
   }
 };
+
+export {};
